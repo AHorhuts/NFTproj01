@@ -10,8 +10,17 @@ contract Horhuts is ERC721, ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
 
     Counters.Counter private _tokenIdCounter;
+    
+    string[] private NFTuri;
 
-    constructor() ERC721("Horhuts", "HORH") {}
+    constructor(string[] memory _NFTuri) ERC721("Horhuts", "HORH"){
+        require (_NFTuri.length == 25);
+        NFTuri = _NFTuri;
+    }
+    
+    function Mint() public  onlyOwner {
+        safeMint(msg.sender, NFTuri[NFTuri.length-1]);
+    }
 
     function safeMint(address to, string memory uri) public onlyOwner {
         uint256 tokenId = _tokenIdCounter.current();
