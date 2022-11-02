@@ -18,16 +18,25 @@ contract Horhuts is ERC721, ERC721URIStorage, Ownable {
         NFTuri = _NFTuri;
     }
     
-    function Mint() public  onlyOwner {
-        safeMint(msg.sender, NFTuri[NFTuri.length-1]);
+     function Mint() public  onlyOwner {
+        safeMint(msg.sender);
+        
     }
-
-    function safeMint(address to, string memory uri) public onlyOwner {
+    // SafeMint не работает, это я пытался разными способами нужный результат получить, пока что на этом остановился
+    function safeMint(address to) public onlyOwner {
         uint256 tokenId = _tokenIdCounter.current();
+        if (tokenId < 5){
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
-        _setTokenURI(tokenId, uri);
-    }
+        }
+        else {
+        _safeMint(to, _random.tokenId);
+        }
+     }
+    
+    function _random(uint tokenId) public view returns(uint){
+        return uint(keccak256(abi.encodePacked(block.timestamp,block.difficulty,  
+        msg.sender))) % tokenId;
 
     // The following functions are overrides required by Solidity.
 
