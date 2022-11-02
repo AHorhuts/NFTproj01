@@ -5,6 +5,7 @@
   "scripts": {
     "compile": "hardhat compile",
     "test": "hardhat test ./test/unit/*.spec.ts --network hardhat",
+    "test-nft": "hardhat test ./test/unit/NFT.spec.ts",
     "test-staging": "hardhat test ./test/staging/*.spec.ts --network goerli",
     "lint": "solhint 'contracts/*.sol'",
     "lint:fix": "solhint 'contracts/**/*.sol' --fix",
@@ -40,6 +41,7 @@
     "typescript": "^4.5.4"
   },
   "dependencies": {
+    "@openzeppelin/contracts": "^4.7.3",
     "@appliedblockchain/chainlink-contracts": "0.0.4",
     "@appliedblockchain/chainlink-plugins-fund-link": "0.0.1",
     "@chainlink/contracts": "^0.4.0",
