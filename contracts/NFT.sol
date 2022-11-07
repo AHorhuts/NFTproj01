@@ -11,16 +11,17 @@ contract Horhuts is ERC721, ERC721URIStorage, Ownable {
 
     Counters.Counter private _tokenIdCounter;
     
-    mapping(uint => uint) private _availableTokenId;
-    uint256 private _numAvailableTokens;
+     mapping(uint => uint) private _availableTokenId;
+     uint256 private _numAvailableTokens;
 
      // Mapping from token ID to owner address
     mapping(uint256 => address) private _owners;
-
-    // Mapping owner address to token count
-    mapping(address => uint256) private _balances;
     
     string[] private NFTuri;
+    
+    address payable wallet1;
+    address payable wallet2;
+    uint private mintPrice;
     
     
     constructor(string[] memory _NFTuri) ERC721("Horhuts", "HORH"){
@@ -29,7 +30,9 @@ contract Horhuts is ERC721, ERC721URIStorage, Ownable {
         _numAvailableTokens = _NFTuri.length;
     }
       
-    function mint() public onlyOwner {
+    function mint() public payable onlyOwner {
+        require(msg.value == mintPrice, "Not enough ETH sent");
+        
         uint256 tokenId = _tokenIdCounter.current();
         if (tokenId < 5) {
             _tokenIdCounter.increment();
@@ -38,6 +41,9 @@ contract Horhuts is ERC721, ERC721URIStorage, Ownable {
         else {
             _safeMint(msg.sender, _random(tokenId));
         }
+
+        _owners[tokenId] = msg.sender;
+        
     }
 
     function _random(uint tokenId) public view returns (uint){
@@ -45,6 +51,18 @@ contract Horhuts is ERC721, ERC721URIStorage, Ownable {
             keccak256(abi.encodePacked(block.timestamp, block.difficulty, msg.sender))
         ) % tokenId;
     }
+    
+    function withdrawAmount(uint256 amount) public {
+        require(amount <= getBalance());
+        wallet1.transfer(amount / 100 * 10);
+        wallet2.transfer(amount / 100 * 90);
+    }
+
+    //balance of this contract
+    function getBalance() public view returns (uint256) {
+         return address(this).balance;
+     }
+
 
     // The following functions are overrides required by Solidity.
 
@@ -67,7 +85,5 @@ contract Horhuts is ERC721, ERC721URIStorage, Ownable {
         
     }
     
-}    
-    
-    
+   }
 
