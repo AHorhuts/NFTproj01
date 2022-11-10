@@ -1,10 +1,11 @@
 import {assert, expect} from "chai"
-import { BigNumber } from "ethers"
+import {BigNumber, ContractTransaction} from "ethers"
 import { deployments, network, ethers } from "hardhat"
 import { developmentChains } from "../../helper-hardhat-config"
 import {Horhuts, Horhuts__factory, MockV3Aggregator, PriceConsumerV3} from "../../typechain"
 import {SignerWithAddress} from "@nomiclabs/hardhat-ethers/signers";
 import {TransferEvent} from "../../typechain/contracts/NFT.sol/Horhuts";
+
 
 describe("NFT test", async () => {
   // Price Feed Address, values can be obtained at https://docs.chain.link/docs/reference-contracts
@@ -47,10 +48,18 @@ describe("NFT test", async () => {
         expect(await contract.tokenURI(3)).equal('3')
         expect(await contract.tokenURI(4)).equal('4')
 
+        // next should random mint
         const tx = await contract.mint()
-        // const receipt = await tx.wait()
-        // const event: TransferEvent = receipt.events![0] as TransferEvent
-        // console.log(event)
-        //.emit(contract, 'Transfer')
+        const tokenId = await getTokenId(tx)
+
+        expect(tokenId).greaterThanOrEqual(6)
+        expect(tokenId).lessThanOrEqual(25)
     })
 })
+
+
+async function getTokenId(tx: ContractTransaction) {
+    const {events} = await tx.wait()
+    const transferEvent = events?.[0] as TransferEvent
+    return transferEvent.args[2].toNumber()
+}

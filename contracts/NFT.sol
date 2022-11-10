@@ -10,58 +10,53 @@ contract Horhuts is ERC721, ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
 
     Counters.Counter private _tokenIdCounter;
-    
-     mapping(uint => uint) private _availableTokenId;
-     uint256 private _numAvailableTokens;
 
-     // Mapping from token ID to owner address
-    mapping(uint256 => address) private _owners;
-    
     string[] private NFTuri;
-    
+
     address payable wallet1;
     address payable wallet2;
     uint private mintPrice;
-    
-    
+    uint[] availableTokenIds = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25];
+
     constructor(string[] memory _NFTuri) ERC721("Horhuts", "HORH"){
         require(_NFTuri.length == 25, "Invalid URI list size");
         NFTuri = _NFTuri;
-        _numAvailableTokens = _NFTuri.length;
     }
-      
+
     function mint() public payable onlyOwner {
         require(msg.value == mintPrice, "Not enough ETH sent");
-        
+
         uint256 tokenId = _tokenIdCounter.current();
         if (tokenId < 5) {
             _tokenIdCounter.increment();
             _safeMint(msg.sender, tokenId);
         }
         else {
-            _safeMint(msg.sender, _random(tokenId));
-        }
+            uint randomIndex = _random(availableTokenIds.length);
+            _safeMint(msg.sender, availableTokenIds[randomIndex]);
 
-        _owners[tokenId] = msg.sender;
-        
+            // remove randomIndex element from availableTokenIds
+            availableTokenIds[randomIndex] = availableTokenIds[availableTokenIds.length - 1];
+            availableTokenIds.pop();
+        }
     }
 
-    function _random(uint tokenId) public view returns (uint){
+    function _random(uint max) public view returns (uint){
         return uint(
             keccak256(abi.encodePacked(block.timestamp, block.difficulty, msg.sender))
-        ) % tokenId;
+        ) % max;
     }
-    
+
     function withdrawAmount(uint256 amount) public {
         require(amount <= getBalance());
-        wallet1.transfer(amount / 100 * 10);
-        wallet2.transfer(amount / 100 * 90);
+        wallet1.transfer(amount * 10 / 100);
+        wallet2.transfer(amount * 90 / 100);
     }
 
     //balance of this contract
     function getBalance() public view returns (uint256) {
-         return address(this).balance;
-     }
+        return address(this).balance;
+    }
 
 
     // The following functions are overrides required by Solidity.
@@ -71,19 +66,17 @@ contract Horhuts is ERC721, ERC721URIStorage, Ownable {
     }
 
     function tokenURI(uint256 tokenId)
-    public
-    view
-    override(ERC721, ERC721URIStorage)
-    returns (string memory)
+        public
+        view
+        override(ERC721, ERC721URIStorage)
+        returns (string memory)
     {
         return NFTuri[tokenId];
     }
 
-    function setTokenURI(uint tokenId, string memory _tokenURI) public onlyOwner{
+    function setTokenURI(uint tokenId, string memory _tokenURI) public onlyOwner {
         require(!_exists(tokenId), "You can't change URI of already existing NFT");
         NFTuri[tokenId] = _tokenURI;
-        
     }
-    
-   }
+}
 
