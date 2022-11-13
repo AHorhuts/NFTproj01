@@ -8,7 +8,7 @@ import {TransferEvent} from "../../typechain/contracts/NFT.sol/Horhuts";
 
 
 describe("NFT test", async () => {
-  // Price Feed Address, values can be obtained at https://docs.chain.link/docs/reference-contracts
+    // Price Feed Address, values can be obtained at https://docs.chain.link/docs/reference-contracts
 
     const uris = [...Array(25).keys()].map( item => item.toFixed())
 
@@ -48,12 +48,19 @@ describe("NFT test", async () => {
         expect(await contract.tokenURI(3)).equal('3')
         expect(await contract.tokenURI(4)).equal('4')
 
-        // next should random mint
-        const tx = await contract.mint()
-        const tokenId = await getTokenId(tx)
+        const usedTokens = [0, 1, 2, 3, 4]
 
-        expect(tokenId).greaterThanOrEqual(6)
-        expect(tokenId).lessThanOrEqual(25)
+        // next should random mint
+        for (let i = 0; i < 21; i++) {
+            const tx = await contract.mint()
+            const tokenId = await getTokenId(tx)
+            console.log(tokenId);
+
+            expect(tokenId).greaterThanOrEqual(5)
+            expect(tokenId).lessThanOrEqual(25)
+            expect(usedTokens.includes(tokenId)).false
+            usedTokens.push(tokenId)
+        }
     })
 })
 
