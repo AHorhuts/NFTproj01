@@ -12,6 +12,7 @@ describe("NFT test", async () => {
     // Price Feed Address, values can be obtained at https://docs.chain.link/docs/reference-contracts
 
     const uris = [...Array(25).keys()].map( item => item.toFixed())
+    const mintPrice = await contract.
 
     let contract: Horhuts
     let deployer: SignerWithAddress
@@ -22,7 +23,7 @@ describe("NFT test", async () => {
         // await deployments.fixture(["mocks", "feed"])
         [deployer, owner, anotherAddr] = await ethers.getSigners()
         const factory = await ethers.getContractFactory("Horhuts") as Horhuts__factory
-        contract = await factory.deploy(uris) // todo add price to constructor
+        contract = await factory.deploy(uris, mintPrice) // todo add price to constructor
         await contract.deployed()
     })
 
