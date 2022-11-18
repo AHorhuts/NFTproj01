@@ -50,7 +50,7 @@ export interface HorhutsInterface extends utils.Interface {
     "tokenURI(uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
-    "withdrawAmount(uint256)": FunctionFragment;
+    "withdraw(uint256)": FunctionFragment;
   };
 
   getFunction(
@@ -75,7 +75,7 @@ export interface HorhutsInterface extends utils.Interface {
       | "tokenURI"
       | "transferFrom"
       | "transferOwnership"
-      | "withdrawAmount"
+      | "withdraw"
   ): FunctionFragment;
 
   encodeFunctionData(
@@ -160,7 +160,7 @@ export interface HorhutsInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "withdrawAmount",
+    functionFragment: "withdraw",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
 
@@ -214,10 +214,7 @@ export interface HorhutsInterface extends utils.Interface {
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "withdrawAmount",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
 
   events: {
     "Approval(address,address,uint256)": EventFragment;
@@ -404,7 +401,7 @@ export interface Horhuts extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    withdrawAmount(
+    withdraw(
       amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
@@ -507,7 +504,7 @@ export interface Horhuts extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  withdrawAmount(
+  withdraw(
     amount: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
@@ -606,7 +603,7 @@ export interface Horhuts extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    withdrawAmount(
+    withdraw(
       amount: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -754,7 +751,7 @@ export interface Horhuts extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    withdrawAmount(
+    withdraw(
       amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
@@ -858,7 +855,7 @@ export interface Horhuts extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    withdrawAmount(
+    withdraw(
       amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;

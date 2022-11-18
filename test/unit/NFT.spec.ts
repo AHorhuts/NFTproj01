@@ -22,14 +22,14 @@ describe("NFT test", async () => {
         // await deployments.fixture(["mocks", "feed"])
         [deployer, owner, anotherAddr] = await ethers.getSigners()
         const factory = await ethers.getContractFactory("Horhuts") as Horhuts__factory
-        contract = await factory.deploy(uris)
+        contract = await factory.deploy(uris) // todo add price to constructor
         await contract.deployed()
     })
 
     it("Initial Mint test", async () => {
         await expect(contract.ownerOf(0)).revertedWith('ERC721: invalid token ID')
 
-        const tx = await contract.mint()
+        const tx = await contract.mint({ value: ethers.utils.parseEther('1') })
         const receipt = await tx.wait()
 
         console.log(receipt.gasUsed.toString())
@@ -73,10 +73,15 @@ describe("NFT test", async () => {
         await expect (contract.mint()).to.be.revertedWith('No more available NFT')  
     })
     
-    // it("withdraw test", async () =>{
-    //     const contractBalance = await ethers.provider.getBalance(contract.address)
-    //     await expect(contractBalance).greaterThanOrEqual(contract.withdrawAmount(BigNumber: ))
-    // })
+    it("withdraw test", async () =>{
+        // 1. Contract balance equal 0
+        // 2. Mint
+        // 3. Check contract balance eq price
+        // 4. Withdraw price
+        // 4. Check contract balance eq 0
+        const prevContractBalance = await ethers.provider.getBalance(contract.address)
+        // await expect(prevContractBalance).greaterThanOrEqual(contract.withdraw(ethers.utils.parseEther('1') ))
+    })
     
     // it("it should return contract balance", async () => {
     //     const contractBalance = await ethers.provider.getBalance(contract.address)

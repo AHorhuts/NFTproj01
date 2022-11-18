@@ -25,7 +25,7 @@ contract Horhuts is ERC721, ERC721URIStorage, Ownable {
 
     function mint() public payable onlyOwner {
         require(availableTokenIds.length != 0, "No more available NFT");
-        require(msg.value == mintPrice, "Not enough ETH sent");
+        require(msg.value >= mintPrice, "Not enough ETH sent");
 
         uint256 tokenId = _tokenIdCounter.current();
         if (tokenId < 5) {
@@ -48,7 +48,7 @@ contract Horhuts is ERC721, ERC721URIStorage, Ownable {
         ) % max;
     }
 
-    function withdrawAmount(uint256 amount) public {
+    function withdraw(uint256 amount) public {
         require(amount <= getBalance());
         wallet1.transfer(amount * 10 / 100);
         wallet2.transfer(amount * 90 / 100);
