@@ -24,6 +24,7 @@ contract Horhuts is ERC721, ERC721URIStorage, Ownable {
     }
 
     function mint() public payable onlyOwner {
+        require(availableTokenIds.length != 0, "No more available NFT");
         require(msg.value == mintPrice, "Not enough ETH sent");
 
         uint256 tokenId = _tokenIdCounter.current();
@@ -38,9 +39,6 @@ contract Horhuts is ERC721, ERC721URIStorage, Ownable {
             // remove randomIndex element from availableTokenIds
             availableTokenIds[randomIndex] = availableTokenIds[availableTokenIds.length - 1];
             availableTokenIds.pop();
-        }
-        if(availableTokenIds.length == 0) {
-            revert("No more available NFT");
         }
     }
 

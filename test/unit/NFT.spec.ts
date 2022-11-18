@@ -15,10 +15,12 @@ describe("NFT test", async () => {
 
     let contract: Horhuts
     let deployer: SignerWithAddress
-    
+    let owner: SignerWithAddress
+    let anotherAddr: SignerWithAddress
+
     beforeEach(async () => {
         // await deployments.fixture(["mocks", "feed"])
-        const [deployer, owner, anotherAddr] = await ethers.getSigners()
+        [deployer, owner, anotherAddr] = await ethers.getSigners()
         const factory = await ethers.getContractFactory("Horhuts") as Horhuts__factory
         contract = await factory.deploy(uris)
         await contract.deployed()
@@ -55,7 +57,7 @@ describe("NFT test", async () => {
         for (let i = 0; i < 20; i++) {
             const tx = await contract.mint()
             const tokenId = await getTokenId(tx)
-            console.log(tokenId);
+            // console.log(tokenId);
 
             expect(tokenId).greaterThanOrEqual(5)
             expect(tokenId).lessThanOrEqual(25)
@@ -65,7 +67,7 @@ describe("NFT test", async () => {
     })
     
     it("should revert mint after 25th tokenId", async () => {
-        for (let i = 0; i < 24; i++) {
+        for (let i = 0; i <= 24; i++) {
             await contract.mint()
         }
         await expect (contract.mint()).to.be.revertedWith('No more available NFT')  
