@@ -12,17 +12,19 @@ contract Horhuts is ERC721, ERC721URIStorage, Ownable {
     Counters.Counter private _tokenIdCounter;
 
     string[] private NFTuri;
-
     address payable wallet1;
     address payable wallet2;
+    
     uint private mintPrice;
     uint[] availableTokenIds = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25];
 
-    constructor(string[] memory _NFTuri) ERC721("Horhuts", "HORH"){
+    constructor(string[] memory _NFTuri, address payable wallet1_, address payable wallet2_, uint mintPrice_) ERC721("Horhuts", "HORH"){
         require(_NFTuri.length == 25, "Invalid URI list size");
         NFTuri = _NFTuri;
+        wallet1 = wallet1_;
+        wallet2 = wallet2_;
+        mintPrice = mintPrice_;
     }
-
     function mint() public payable onlyOwner {
         require(availableTokenIds.length != 0, "No more available NFT");
         require(msg.value >= mintPrice, "Not enough ETH sent");
