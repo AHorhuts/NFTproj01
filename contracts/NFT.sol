@@ -60,8 +60,12 @@ contract Horhuts is ERC721, ERC721URIStorage, Ownable {
     function getBalance() public view returns (uint256) {
         return address(this).balance;
     }
-
-
+    
+    // set new price for Mint
+    function setMintPrice(uint newPrice) public onlyOwner {
+        mintPrice = newPrice;  
+    }
+    
     // The following functions are overrides required by Solidity.
 
     function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage) {
