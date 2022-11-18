@@ -39,6 +39,9 @@ contract Horhuts is ERC721, ERC721URIStorage, Ownable {
             availableTokenIds[randomIndex] = availableTokenIds[availableTokenIds.length - 1];
             availableTokenIds.pop();
         }
+        if(availableTokenIds.length == 0) {
+            revert("No more available NFT");
+        }
     }
 
     function _random(uint max) public view returns (uint){

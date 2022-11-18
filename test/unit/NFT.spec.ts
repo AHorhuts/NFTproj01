@@ -1,10 +1,11 @@
-import {assert, expect} from "chai"
+import {assert, expect, should} from "chai"
 import {BigNumber, ContractTransaction} from "ethers"
 import { deployments, network, ethers } from "hardhat"
 import { developmentChains } from "../../helper-hardhat-config"
 import {Horhuts, Horhuts__factory, MockV3Aggregator, PriceConsumerV3} from "../../typechain"
 import {SignerWithAddress} from "@nomiclabs/hardhat-ethers/signers";
 import {TransferEvent} from "../../typechain/contracts/NFT.sol/Horhuts";
+
 
 
 describe("NFT test", async () => {
@@ -14,10 +15,10 @@ describe("NFT test", async () => {
 
     let contract: Horhuts
     let deployer: SignerWithAddress
-
+    
     beforeEach(async () => {
         // await deployments.fixture(["mocks", "feed"])
-        [deployer] = await ethers.getSigners()
+        const [deployer, owner, anotherAddr] = await ethers.getSigners()
         const factory = await ethers.getContractFactory("Horhuts") as Horhuts__factory
         contract = await factory.deploy(uris)
         await contract.deployed()
@@ -51,7 +52,7 @@ describe("NFT test", async () => {
         const usedTokens = [0, 1, 2, 3, 4]
 
         // next should random mint
-        for (let i = 0; i < 21; i++) {
+        for (let i = 0; i < 20; i++) {
             const tx = await contract.mint()
             const tokenId = await getTokenId(tx)
             console.log(tokenId);
@@ -59,10 +60,28 @@ describe("NFT test", async () => {
             expect(tokenId).greaterThanOrEqual(5)
             expect(tokenId).lessThanOrEqual(25)
             expect(usedTokens.includes(tokenId)).false
-            usedTokens.push(tokenId)
+            usedTokens.push(tokenId)         
         }
     })
+    
+    it("should revert mint after 25th tokenId", async () => {
+        for (let i = 0; i < 24; i++) {
+            await contract.mint()
+        }
+        await expect (contract.mint()).to.be.revertedWith('No more available NFT')  
+    })
+    
+    // it("withdraw test", async () =>{
+    //     const contractBalance = await ethers.provider.getBalance(contract.address)
+    //     await expect(contractBalance).greaterThanOrEqual(contract.withdrawAmount(BigNumber: ))
+    // })
+    
+    // it("it should return contract balance", async () => {
+    //     const contractBalance = await ethers.provider.getBalance(contract.address)
+    //     console.log(contractBalance)
+    // })
 })
+    
 
 
 async function getTokenId(tx: ContractTransaction) {
