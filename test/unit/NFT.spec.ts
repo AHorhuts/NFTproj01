@@ -1,10 +1,13 @@
 import {assert, expect, should} from "chai"
-import {BigNumber, ContractTransaction} from "ethers"
+import {BigNumber, BigNumberish, ContractTransaction, FixedNumber} from "ethers"
 import { deployments, network, ethers } from "hardhat"
 import { developmentChains } from "../../helper-hardhat-config"
 import {Horhuts, Horhuts__factory, MockV3Aggregator, PriceConsumerV3} from "../../typechain"
 import {SignerWithAddress} from "@nomiclabs/hardhat-ethers/signers";
 import {TransferEvent} from "../../typechain/contracts/NFT.sol/Horhuts";
+import { getAddress, isAddress } from "ethers/lib/utils"
+import { bigNum } from "@chainlink/test-helpers/dist/src/matchers"
+import { Address } from "hardhat-deploy/types"
 
 
 
@@ -12,18 +15,22 @@ describe("NFT test", async () => {
     // Price Feed Address, values can be obtained at https://docs.chain.link/docs/reference-contracts
 
     const uris = [...Array(25).keys()].map( item => item.toFixed())
-    const mintPrice = await contract.
+    
+    
 
     let contract: Horhuts
     let deployer: SignerWithAddress
     let owner: SignerWithAddress
     let anotherAddr: SignerWithAddress
+    let price = 
+    let wallet1 = 
+    let wallet2 = 
 
     beforeEach(async () => {
         // await deployments.fixture(["mocks", "feed"])
-        [deployer, owner, anotherAddr] = await ethers.getSigners()
+        [deployer, owner, wallet1, wallet2] = await ethers.getSigners()
         const factory = await ethers.getContractFactory("Horhuts") as Horhuts__factory
-        contract = await factory.deploy(uris, mintPrice) // todo add price to constructor
+        contract = await factory.deploy(uris, price, wallet1, wallet2) // todo add price to constructor
         await contract.deployed()
     })
 
@@ -81,6 +88,20 @@ describe("NFT test", async () => {
         // 4. Withdraw price
         // 4. Check contract balance eq 0
         const prevContractBalance = await ethers.provider.getBalance(contract.address)
+        expect (await prevContractBalance).to.be.equal("0")
+            
+        const tx = await contract.mint({ value: ethers.utils.parseEther('1') })
+        await tx.wait()
+        
+        const currentContractBal = await ethers.provider.getBalance(contract.address)
+        expect(await currentContractBal).to.be.equal({value: ethers.utils.parseEther('1')})
+        
+        const setWithdrawTx = await (await contract.withdraw(ethers.utils.parseEther(await currentContractBal.toString())).to.be.equal('1'))
+        await setWithdrawTx.wait()
+        
+        const pastContractBalance = await ethers.provider.getBalance(contract.address)
+        expect(ethers.utils.formatEther(await pastContractBalance.toString())).to.be.equal('0')
+        
         // await expect(prevContractBalance).greaterThanOrEqual(contract.withdraw(ethers.utils.parseEther('1') ))
     })
     
