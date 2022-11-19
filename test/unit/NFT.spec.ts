@@ -22,15 +22,16 @@ describe("NFT test", async () => {
     let deployer: SignerWithAddress
     let owner: SignerWithAddress
     let anotherAddr: SignerWithAddress
-    let price = 
-    let wallet1 = 
-    let wallet2 = 
+    let price: BigNumberish
+    let wallet1: SignerWithAddress
+    let wallet2: SignerWithAddress
+    
 
     beforeEach(async () => {
         // await deployments.fixture(["mocks", "feed"])
-        [deployer, owner, wallet1, wallet2] = await ethers.getSigners()
+        [deployer, owner, anotherAddr] = await ethers.getSigners()
         const factory = await ethers.getContractFactory("Horhuts") as Horhuts__factory
-        contract = await factory.deploy(uris, price, wallet1, wallet2) // todo add price to constructor
+        contract = await factory.deploy(uris, wallet1.address, wallet2.address, price) // todo add price to constructor
         await contract.deployed()
     })
 
@@ -88,13 +89,13 @@ describe("NFT test", async () => {
         // 4. Withdraw price
         // 4. Check contract balance eq 0
         const prevContractBalance = await ethers.provider.getBalance(contract.address)
-        expect (await prevContractBalance).to.be.equal("0")
+        expect (prevContractBalance).to.be.equal("0")
             
         const tx = await contract.mint({ value: ethers.utils.parseEther('1') })
         await tx.wait()
         
         const currentContractBal = await ethers.provider.getBalance(contract.address)
-        expect(await currentContractBal).to.be.equal({value: ethers.utils.parseEther('1')})
+        expect(currentContractBal).to.be.equal({value: ethers.utils.parseEther('1')})
         
         const setWithdrawTx = await (await contract.withdraw(ethers.utils.parseEther(await currentContractBal.toString())).to.be.equal('1'))
         await setWithdrawTx.wait()
@@ -105,10 +106,34 @@ describe("NFT test", async () => {
         // await expect(prevContractBalance).greaterThanOrEqual(contract.withdraw(ethers.utils.parseEther('1') ))
     })
     
-    // it("it should return contract balance", async () => {
-    //     const contractBalance = await ethers.provider.getBalance(contract.address)
-    //     console.log(contractBalance)
-    // })
+     it("it should return contract balance", async () => {
+         const contractBalance = await ethers.provider.getBalance(contract.address)
+         console.log(contractBalance)
+     })
+    
+    it("random number test", async() => {
+        for (let i = 0; i < 50; i++) {
+            const randNum = await contract._random(i)
+        
+            expect(randNum).to.be.greaterThanOrEqual(0)
+            expect (randNum).to.be.lessThanOrEqual(i)
+        }
+    })
+
+    it("it should set mint price", async() => {
+        //const prevPrice = expect(price).eq('')
+        for (let i = 1, i < 10, i++) {
+            const tx = await contract.setMintPrice(i)
+            await tx.wait()
+
+            const newPrice = expect(tx).eq(i)
+            
+        }
+    })
+
+    it("it should set token URI", async() =>{
+
+    })
 })
     
 

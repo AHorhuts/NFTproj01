@@ -44,6 +44,7 @@ export interface HorhutsInterface extends utils.Interface {
     "safeTransferFrom(address,address,uint256)": FunctionFragment;
     "safeTransferFrom(address,address,uint256,bytes)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
+    "setMintPrice(uint256)": FunctionFragment;
     "setTokenURI(uint256,string)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "symbol()": FunctionFragment;
@@ -69,6 +70,7 @@ export interface HorhutsInterface extends utils.Interface {
       | "safeTransferFrom(address,address,uint256)"
       | "safeTransferFrom(address,address,uint256,bytes)"
       | "setApprovalForAll"
+      | "setMintPrice"
       | "setTokenURI"
       | "supportsInterface"
       | "symbol"
@@ -135,6 +137,10 @@ export interface HorhutsInterface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<boolean>]
   ): string;
   encodeFunctionData(
+    functionFragment: "setMintPrice",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "setTokenURI",
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
   ): string;
@@ -194,6 +200,10 @@ export interface HorhutsInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "setApprovalForAll",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setMintPrice",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -371,6 +381,11 @@ export interface Horhuts extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    setMintPrice(
+      newPrice: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     setTokenURI(
       tokenId: PromiseOrValue<BigNumberish>,
       _tokenURI: PromiseOrValue<string>,
@@ -474,6 +489,11 @@ export interface Horhuts extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  setMintPrice(
+    newPrice: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   setTokenURI(
     tokenId: PromiseOrValue<BigNumberish>,
     _tokenURI: PromiseOrValue<string>,
@@ -570,6 +590,11 @@ export interface Horhuts extends BaseContract {
     setApprovalForAll(
       operator: PromiseOrValue<string>,
       approved: PromiseOrValue<boolean>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setMintPrice(
+      newPrice: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -721,6 +746,11 @@ export interface Horhuts extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    setMintPrice(
+      newPrice: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     setTokenURI(
       tokenId: PromiseOrValue<BigNumberish>,
       _tokenURI: PromiseOrValue<string>,
@@ -822,6 +852,11 @@ export interface Horhuts extends BaseContract {
     setApprovalForAll(
       operator: PromiseOrValue<string>,
       approved: PromiseOrValue<boolean>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setMintPrice(
+      newPrice: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
