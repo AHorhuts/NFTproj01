@@ -9,3 +9,4 @@ export { LinkTokenInterface__factory } from "./LinkTokenInterface__factory";
 export { OperatorInterface__factory } from "./OperatorInterface__factory";
 export { OracleInterface__factory } from "./OracleInterface__factory";
 export { PointerInterface__factory } from "./PointerInterface__factory";
+export { VRFCoordinatorV2Interface__factory } from "./VRFCoordinatorV2Interface__factory";

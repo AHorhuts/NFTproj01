@@ -2,4 +2,3 @@
 /* tslint:disable */
 /* eslint-disable */
 export { KeepersCounterEchidnaTest__factory } from "./KeepersCounterEchidnaTest__factory";
-export { NftEchidnaTest__factory } from "./NftEchidnaTest__factory";

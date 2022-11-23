@@ -2,3 +2,4 @@
 /* tslint:disable */
 /* eslint-disable */
 export * as fuzzing from "./fuzzing";
+export { MockOracle__factory } from "./MockOracle__factory";
