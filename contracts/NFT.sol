@@ -15,7 +15,7 @@ contract SBML is ERC721, ERC721URIStorage, Ownable {
     address payable wallet1;
     address payable wallet2;
 
-    uint internal mintPrice;
+    uint private mintPrice;
     uint8[] internal availableTokenIds = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25];
 
     constructor(string[25] memory _NFTuri, address payable wallet1_, address payable wallet2_, uint mintPrice_) ERC721("SBML X", "SBML"){
