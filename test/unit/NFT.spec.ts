@@ -128,10 +128,15 @@ describe("NFT test", async () => {
     })
 
     it("should set token URI", async() =>{
-        expect(await contract.setTokenURI(uris[0], "https://test.url/0" ))
-        expect(await contract.setTokenURI(uris[1], "https://test.url/1" ))
-        expect(await contract.setTokenURI(uris[2], "https://test.url/2" ))
-        expect(await contract.setTokenURI(uris[3], "https://test.url/3" ))
+        await contract.setTokenURI(0, "https://test.url/0" )
+        await contract.setTokenURI(1, "https://test.url/1" )
+        await contract.setTokenURI(2, "https://test.url/2" )
+        await contract.setTokenURI(3, "https://test.url/3" )
+
+        expect(await contract.tokenURI(0)).equal("https://test.url/0")
+        expect(await contract.tokenURI(1)).equal("https://test.url/1")
+        expect(await contract.tokenURI(2)).equal("https://test.url/2")
+        expect(await contract.tokenURI(3)).equal("https://test.url/3")
     })
 })
     
