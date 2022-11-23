@@ -83,31 +83,33 @@ describe("NFT test", async () => {
     
     it("withdraw test", async () =>{
         // 1. Contract balance equal 0
-        // 2. Mint
-        // 3. Check contract balance eq price
-        // 4. Withdraw price
-        // 4. Check contract balance eq 0
         const prevContractBalance = await ethers.provider.getBalance(contract.address)
         expect (prevContractBalance).to.be.equal("0")
-            
+
+        // 2. Mint
         const tx = await contract.mint({ value: ethers.utils.parseEther('1') })
         await tx.wait()
-        
+
+        // 3. Check contract balance eq price
         const currentContractBal = await ethers.provider.getBalance(contract.address)
         expect(currentContractBal).to.be.equal(ethers.utils.parseEther('1'))
-        
+
+        // 4. Withdraw price
         const setWithdrawTx = await contract.withdraw(ethers.utils.parseEther('1'))
         await setWithdrawTx.wait()
-        
+
+        // 4. Check contract balance eq 0
         const newContractBalance = await ethers.provider.getBalance(contract.address)
-        expect(newContractBalance).equal("0")
-        
-        // await expect(prevContractBalance).greaterThanOrEqual(contract.withdraw(ethers.utils.parseEther('1') ))
+        expect(newContractBalance).equal(0)
+
+        // todo
+        // 5. Check wallet1 balance
+        // 6. Check wallet2 balance
     })
     
     it("should return contract balance", async () => {
         const contractBalance = await ethers.provider.getBalance(contract.address)
-        console.log(contractBalance)
+        expect(contractBalance).exist
     })
     
     it("random number test", async() => {
@@ -121,7 +123,7 @@ describe("NFT test", async () => {
 
     it("should set mint price", async() => {
         await contract.setMintPrice(ethers.utils.parseEther('2'))
-        let price = await contract.getMintPrice()
+        const price = await contract.getMintPrice()
         expect (price).equal(ethers.utils.parseEther('2'))   
     })
 
