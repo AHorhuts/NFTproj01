@@ -2,3 +2,4 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { KeepersCounterEchidnaTest } from "./KeepersCounterEchidnaTest";
+export type { NftEchidnaTest } from "./NftEchidnaTest";

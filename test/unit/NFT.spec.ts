@@ -2,20 +2,18 @@ import {assert, expect, should} from "chai"
 import {BigNumber, BigNumberish, ContractTransaction, FixedNumber} from "ethers"
 import { deployments, network, ethers } from "hardhat"
 import { developmentChains } from "../../helper-hardhat-config"
-import {Horhuts, Horhuts__factory, MockV3Aggregator, PriceConsumerV3, PriceConsumerV3__factory} from "../../typechain"
 import {SignerWithAddress} from "@nomiclabs/hardhat-ethers/signers";
-import {TransferEvent} from "../../typechain/contracts/NFT.sol/Horhuts";
 import { getAddress, isAddress } from "ethers/lib/utils"
 import { bigNum } from "@chainlink/test-helpers/dist/src/matchers"
 import { Address } from "hardhat-deploy/types"
+import {Horhuts, TransferEvent} from "../../typechain/contracts/NFT.sol/Horhuts";
+import {Horhuts__factory} from "../../typechain/factories/contracts/NFT.sol/Horhuts__factory";
 
 
 
 describe("NFT test", async () => {
-    // Price Feed Address, values can be obtained at https://docs.chain.link/docs/reference-contracts
-
     const uris = [...Array(25).keys()].map( item => item.toFixed())
-    
+
     let contract: Horhuts
     let deployer: SignerWithAddress
     let owner: SignerWithAddress
@@ -24,18 +22,18 @@ describe("NFT test", async () => {
     let wallet1: SignerWithAddress
     let wallet2: SignerWithAddress
     let tokenURI: string
-    
+
 
     beforeEach(async () => {
         // await deployments.fixture(["mocks", "feed"])
         [deployer, owner, anotherAddr, wallet1, wallet2] = await ethers.getSigners()
         let price = ethers.utils.parseEther('1')
-        const factory = await ethers.getContractFactory("Horhuts") as Horhuts__factory
+        const factory = await ethers.getContractFactory("SBML") as Horhuts__factory
         contract = await factory.deploy(uris, wallet1.address, wallet2.address, price) // todo add price to constructor
         await contract.deployed()
     })
 
-    it("Initial Mint test", async () => {
+    it("should mint", async () => {
         await expect(contract.ownerOf(0)).revertedWith('ERC721: invalid token ID')
 
         const tx = await contract.mint({ value: ethers.utils.parseEther('1') })
@@ -47,7 +45,7 @@ describe("NFT test", async () => {
         await expect(contract.ownerOf(1)).revertedWith('ERC721: invalid token ID')
     })
 
-    it("multiply mint test", async () => {
+    it("should mint first 5 consecutively and 20 randomly", async () => {
         await contract.mint({ value: ethers.utils.parseEther('1') })
         await contract.mint({ value: ethers.utils.parseEther('1') })
         await contract.mint({ value: ethers.utils.parseEther('1') })
@@ -62,7 +60,7 @@ describe("NFT test", async () => {
 
         const usedTokens = [0, 1, 2, 3, 4]
 
-        // next should random mint
+        // next should be random
         for (let i = 0; i < 20; i++) {
             const tx = await contract.mint({ value: ethers.utils.parseEther('1') })
             const tokenId = await getTokenId(tx)
@@ -76,13 +74,13 @@ describe("NFT test", async () => {
     })
     
     it("should revert mint after 25th tokenId", async () => {
-        for (let i = 0; i <= 24; i++) {
+        for (let i = 0; i < 25; i++) {
             await contract.mint({ value: ethers.utils.parseEther('1') })
         }
         await expect (contract.mint()).to.be.revertedWith('No more available NFT')  
     })
     
-    it("withdraw test", async () =>{
+    it("should withdraw", async () =>{
         // 1. Contract balance equal 0
         // 2. Mint
         // 3. Check contract balance eq price
@@ -90,19 +88,19 @@ describe("NFT test", async () => {
         // 4. Check contract balance eq 0
         const prevContractBalance = await ethers.provider.getBalance(contract.address)
         expect (prevContractBalance).to.be.equal("0")
-            
+
         const tx = await contract.mint({ value: ethers.utils.parseEther('1') })
         await tx.wait()
-        
+
         const currentContractBal = await ethers.provider.getBalance(contract.address)
         expect(currentContractBal).to.be.equal(ethers.utils.parseEther('1'))
-        
+
         const setWithdrawTx = await contract.withdraw(ethers.utils.parseEther('1'))
         await setWithdrawTx.wait()
-        
+
         const newContractBalance = await ethers.provider.getBalance(contract.address)
         expect(await newContractBalance).equal("0")
-        
+
         // await expect(prevContractBalance).greaterThanOrEqual(contract.withdraw(ethers.utils.parseEther('1') ))
     })
     
@@ -110,11 +108,11 @@ describe("NFT test", async () => {
         const contractBalance = await ethers.provider.getBalance(contract.address)
         console.log(contractBalance)
     })
-    
+
     it("random number test", async() => {
         for (let i = 1; i < 50; i++) {
-            const randNum = await contract._random(i)
-        
+            const randNum = await contract.random(i)
+
             expect(randNum).greaterThanOrEqual(0)
             expect(randNum).lessThanOrEqual(i)
         }
@@ -130,8 +128,8 @@ describe("NFT test", async () => {
 
             // let price = expect(tx).eq(i)
             // console.log(price)
-            
-        
+
+
     })
 
     it("should set token URI", async() =>{

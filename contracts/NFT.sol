@@ -6,25 +6,26 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
-contract Horhuts is ERC721, ERC721URIStorage, Ownable {
+contract SBML is ERC721, ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
 
-    Counters.Counter private _tokenIdCounter;
+    Counters.Counter internal _tokenIdCounter;
 
-    string[] private NFTuri;
+    string[25] private NFTuri;
     address payable wallet1;
     address payable wallet2;
-    
-    uint private mintPrice;
-    uint[] availableTokenIds = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25];
 
-    constructor(string[] memory _NFTuri, address payable wallet1_, address payable wallet2_, uint mintPrice_) ERC721("Horhuts", "HORH"){
+    uint private mintPrice;
+    uint8[] internal availableTokenIds = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25];
+
+    constructor(string[25] memory _NFTuri, address payable wallet1_, address payable wallet2_, uint mintPrice_) ERC721("SBML X", "SBML"){
         require(_NFTuri.length == 25, "Invalid URI list size");
         NFTuri = _NFTuri;
         wallet1 = wallet1_;
         wallet2 = wallet2_;
         mintPrice = mintPrice_;
     }
+
     function mint() public payable onlyOwner {
         require(availableTokenIds.length != 0, "No more available NFT");
         require(msg.value >= mintPrice, "Not enough ETH sent");
@@ -35,7 +36,7 @@ contract Horhuts is ERC721, ERC721URIStorage, Ownable {
             _safeMint(msg.sender, tokenId);
         }
         else {
-            uint randomIndex = _random(availableTokenIds.length);
+            uint randomIndex = random(availableTokenIds.length);
             _safeMint(msg.sender, availableTokenIds[randomIndex]);
 
             // remove randomIndex element from availableTokenIds
@@ -44,32 +45,25 @@ contract Horhuts is ERC721, ERC721URIStorage, Ownable {
         }
     }
 
-    function _random(uint max) public view returns (uint){
+    function random(uint max) public view returns (uint){
         return uint(
             keccak256(abi.encodePacked(block.timestamp, block.difficulty, msg.sender))
         ) % max;
     }
 
     function withdraw(uint256 amount) public {
-        require(amount <= getBalance());
+        require(amount <= address(this).balance, "Not enough balance");
         wallet1.transfer(amount * 10 / 100);
         wallet2.transfer(amount * 90 / 100);
     }
 
-    //balance of this contract
-    function getBalance() public view returns (uint256) {
-        return address(this).balance;
+    function _burn(uint256 tokenId) internal pure override(ERC721, ERC721URIStorage) {
+        revert("Not available");
     }
-    
+
     // set new price for Mint
     function setMintPrice(uint newPrice) public onlyOwner {
-        mintPrice = newPrice;  
-    }
-    
-    // The following functions are overrides required by Solidity.
-
-    function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage) {
-        super._burn(tokenId);
+        mintPrice = newPrice;
     }
 
     function tokenURI(uint256 tokenId)
