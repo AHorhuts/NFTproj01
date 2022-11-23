@@ -109,10 +109,9 @@ describe("NFT test", async () => {
 
         // todo
         // 5. Check wallet1 balance
-        expect(await ethers.provider.getBalance(wallet1.address)).to.changeEtherBalance([wallet1.address],ethers.utils.parseEther('0.1'))
-        
+        expect(await ethers.provider.getBalance(wallet1.address)).equal(ethers.utils.parseEther('10000.1'))
         // 6. Check wallet2 balance 
-        expect(await ethers.provider.getBalance(wallet2.address)).to.changeEtherBalance([wallet2.address],ethers.utils.parseEther('0.9'))
+        expect(await ethers.provider.getBalance(wallet2.address)).equal(ethers.utils.parseEther('10000.9'))
     })
     
     it("should return contract balance", async () => {
