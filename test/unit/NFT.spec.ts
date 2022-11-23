@@ -9,6 +9,7 @@ import { Address } from "hardhat-deploy/types"
 import {Horhuts, TransferEvent} from "../../typechain/contracts/NFT.sol/Horhuts";
 import {Horhuts__factory} from "../../typechain/factories/contracts/NFT.sol/Horhuts__factory";
 import { SBML } from "../../typechain";
+import { wallet } from "@chainlink/test-helpers";
 
 
 
@@ -85,6 +86,10 @@ describe("NFT test", async () => {
         // 1. Contract balance equal 0
         const prevContractBalance = await ethers.provider.getBalance(contract.address)
         expect (prevContractBalance).to.be.equal("0")
+        
+        // 1.1 wallets balance 
+        const walletbal1 = await ethers.provider.getBalance(wallet1.address)
+        const walletbal2 = await ethers.provider.getBalance(wallet2.address)
 
         // 2. Mint
         const tx = await contract.mint({ value: ethers.utils.parseEther('1') })
@@ -104,7 +109,10 @@ describe("NFT test", async () => {
 
         // todo
         // 5. Check wallet1 balance
-        // 6. Check wallet2 balance
+        expect(await ethers.provider.getBalance(wallet1.address)).to.changeEtherBalance([wallet1.address],ethers.utils.parseEther('0.1'))
+        
+        // 6. Check wallet2 balance 
+        expect(await ethers.provider.getBalance(wallet2.address)).to.changeEtherBalance([wallet2.address],ethers.utils.parseEther('0.9'))
     })
     
     it("should return contract balance", async () => {
