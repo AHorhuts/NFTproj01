@@ -66,4 +66,5 @@ export const networkConfig: NetworkConfigMap = {
 }
 
 export const developmentChains: string[] = ["hardhat", "localhost"]
+export const testnetChains: string[] = ['goerli']
 export const VERIFICATION_BLOCK_CONFIRMATIONS = 6
