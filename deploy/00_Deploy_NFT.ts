@@ -15,10 +15,10 @@ const deployFunction: DeployFunction = async () => {
     const uris = [...Array(25).keys()].map( item => item.toFixed());
     let price = ethers.utils.parseEther('1');
     const { deploy, log} = deployments;
-    const [deployer, owner, anotherAddr, wallet1, wallet2] = await ethers.getSigners();
+    const [deployer] = await ethers.getSigners();
     const chainId: number | undefined = network.config.chainId;
 
-    const constructorArgs = [uris, price, wallet1.address, wallet2.address]
+    const constructorArgs = [uris, '0xAE03C3f20B69e7cd4277eC17B1ac7e0A160b94ac', '0x36f9bf9bc564684250f1729de1bf6dee1f33443d', price]
     let SBML: Contract
 
 

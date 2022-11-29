@@ -74,6 +74,7 @@ const config: HardhatUserConfig = {
             polygon: POLYGONSCAN_API_KEY,
             goerli: ETHERSCAN_API_KEY,
         },
+        customChains: []
     },
     gasReporter: {
         enabled: process.env.REPORT_GAS !== undefined,
