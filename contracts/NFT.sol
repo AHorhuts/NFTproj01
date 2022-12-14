@@ -26,7 +26,7 @@ contract SBML is ERC721, ERC721URIStorage, Ownable {
         mintPrice = mintPrice_;
     }
 
-    function mint() public payable onlyOwner {
+    function mint() public payable {
         require(availableTokenIds.length != 0, "No more available NFT");
         require(msg.value >= mintPrice, "Not enough ETH sent");
 

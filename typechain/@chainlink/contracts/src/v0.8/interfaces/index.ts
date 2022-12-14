@@ -9,4 +9,3 @@ export type { LinkTokenInterface } from "./LinkTokenInterface";
 export type { OperatorInterface } from "./OperatorInterface";
 export type { OracleInterface } from "./OracleInterface";
 export type { PointerInterface } from "./PointerInterface";
-export type { VRFCoordinatorV2Interface } from "./VRFCoordinatorV2Interface";

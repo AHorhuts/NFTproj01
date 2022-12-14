@@ -16,25 +16,23 @@ const deployFunction: DeployFunction = async () => {
     let price = ethers.utils.parseEther('1');
     const { deploy, log} = deployments;
     const [deployer] = await ethers.getSigners();
-    const chainId: number | undefined = network.config.chainId;
 
-    const constructorArgs = [uris, '0xAE03C3f20B69e7cd4277eC17B1ac7e0A160b94ac', '0x36f9bf9bc564684250f1729de1bf6dee1f33443d', price]
-    let SBML: Contract
+    const constructorArgs = [uris, '0x985AC3C3Dbb4135Bea36D643bf93d073A10520bc', '0x36f9bf9bc564684250f1729de1bf6dee1f33443d', price]
 
 
-    const sbml = await deploy("SBML", {
+    const result = await deploy("SBML", {
         contract: "SBML",
         from: deployer.address,
         log: true,
         args: constructorArgs,
+        gasPrice: '1004340328',
     })
-    SBML = (await ethers.getContract("SBML")) as ERC721
 
     if (testnetChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
         console.log("Verifying on etherscan...")
         await delay(20000)
         await verify(
-            sbml.address,
+            result.address,
             "contracts/NFT.sol:SBML",
             constructorArgs
         )

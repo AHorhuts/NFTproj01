@@ -2,5 +2,3 @@
 /* tslint:disable */
 /* eslint-disable */
 export * as nftSol from "./NFT.sol";
-export * as test from "./test";
-export { KeepersCounter__factory } from "./KeepersCounter__factory";

@@ -3,6 +3,3 @@
 /* eslint-disable */
 import type * as nftSol from "./NFT.sol";
 export type { nftSol };
-import type * as test from "./test";
-export type { test };
-export type { KeepersCounter } from "./KeepersCounter";

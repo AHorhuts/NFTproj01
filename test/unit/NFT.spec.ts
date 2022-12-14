@@ -18,7 +18,7 @@ describe("NFT test", async () => {
     
     let contract: SBML
     let deployer: SignerWithAddress
-    let owner: SignerWithAddress
+    let buyer: SignerWithAddress
     let anotherAddr: SignerWithAddress
     let price: BigNumberish
     let wallet1: SignerWithAddress
@@ -28,7 +28,7 @@ describe("NFT test", async () => {
 
     beforeEach(async () => {
         // await deployments.fixture(["mocks", "feed"])
-        [deployer, owner, anotherAddr, wallet1, wallet2] = await ethers.getSigners()
+        [deployer, buyer, anotherAddr, wallet1, wallet2] = await ethers.getSigners()
         let price = ethers.utils.parseEther('1')
         const factory = await ethers.getContractFactory("SBML") as Horhuts__factory
         contract = await factory.deploy(uris, wallet1.address, wallet2.address, price) // todo add price to constructor
@@ -38,12 +38,12 @@ describe("NFT test", async () => {
     it("Initial Mint test", async () => {
         await expect(contract.ownerOf(0)).revertedWith('ERC721: invalid token ID')
 
-        const tx = await contract.mint({ value: ethers.utils.parseEther('1') })
+        const tx = await contract.connect(buyer).mint({ value: ethers.utils.parseEther('1') })
         const receipt = await tx.wait()
 
         console.log(receipt.gasUsed.toString())
 
-        expect(await contract.ownerOf(0)).equal(deployer.address)
+        expect(await contract.ownerOf(0)).equal(buyer.address)
         await expect(contract.ownerOf(1)).revertedWith('ERC721: invalid token ID')
     })
 
@@ -134,7 +134,7 @@ describe("NFT test", async () => {
         expect (price).equal(ethers.utils.parseEther('2'))   
     })
 
-    it("should set token URI", async() =>{
+    it("should set token URI", async() => {
         await contract.setTokenURI(0, "https://test.url/0" )
         await contract.setTokenURI(1, "https://test.url/1" )
         await contract.setTokenURI(2, "https://test.url/2" )
